@@ -1,26 +1,45 @@
-# def sum_odd_numbers(n):
-#     # Base case: if n is 0, return 0
-#     if n == 0:
-#         return 0
+def solve_test_case():
+    N = input().strip()  # Keep as string
+    n = len(N)
     
-#     # Calculate the nth odd number
-#     nth_odd = 2 * n - 1
+    if n < 3:
+        return "Kamu"  # First player can't make a move
     
-#     # Recursive case: add the nth odd number to the sum of the first (n-1) odd numbers
-#     return nth_odd + sum_odd_numbers(n - 1)
+    # Pre-compute which windows are divisible by 3
+    divisible = [False] * (n-2)
+    for i in range(n-2):
+        num = int(N[i:i+3])  # Get the actual 3-digit number
+        divisible[i] = (num % 3 == 0)
+    
+    # dp[i] represents whether the player facing string length i wins
+    dp = [False] * (n + 1)
+    
+    # Base cases
+    dp[0] = dp[1] = dp[2] = False  # Can't make a move with less than 3 digits
+    
+    # Fill dp
+    for length in range(3, n + 1):
+        # For current length, check if any move leads to a losing position for opponent
+        can_win = False
+        
+        # Number of 3-digit windows possible with current length
+        windows = length - 2
+        
+        # Check each possible starting position for a 3-digit window
+        for i in range(windows):
+            # If this window is divisible by 3
+            if divisible[i]:
+                # After removing middle digit, opponent faces length-1
+                if not dp[length - 1]:
+                    can_win = True
+                    break
+        
+        dp[length] = can_win
+    
+    return "Anda" if dp[n] else "Kamu"
 
-# # Example usage
-# N = 20
-# result = sum_odd_numbers(N)
-# print(f"The sum of the first {N} odd numbers is: {result}")
-
-
-def sum_of_odd_numbers(N):
-    if N == 0:
-        return 0
-    else:
-        return (2 * N - 1) + sum_of_odd_numbers(N - 1)
-
-# Example usage
-N = 20
-print(sum_of_odd_numbers(N))  # Output should be 25 (1 + 3 + 5 + 7 + 9)
+# Handle multiple test cases
+T = int(input())
+for _ in range(T):
+    result = solve_test_case()
+    print(result)
