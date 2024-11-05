@@ -1,12 +1,8 @@
-def result():
-    N = input().strip()
-    n = len(N)
+def square(n):
+    for i in range(0, n):
+        if (i == 0 or i == (n - 1)):
+            print("@ " * n)
+        else:
+            print("@ " + "  " * (n - 2) + "@")
 
-    if n < 3:
-        return "Kamu"
-
-t = int(input())
-
-for _ in range(t):
-    result = solve()
-    print(result)
+square(9)
